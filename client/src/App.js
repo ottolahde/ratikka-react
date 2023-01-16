@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 
 import "./App.css";
 
-import TimeAndFetchButton from "./RefreshButton";
+import MyMap from "./Map.js";
+//import TimeAndFetchButton from "./RefreshButton";
+
+const center = [23.845415115356445, 61.458133697509766];
 
 function App() {
   const [data, setData] = React.useState(null);
@@ -26,7 +29,9 @@ function App() {
 
   return (
     <div className="App">
+      
       <header className="App-header">
+      <MyMap/>
         <h1>{!data ? "Loading..." : "Seuraavaan ratikkaan " + data + " minuuttia"}</h1>
         <p>{!timestampData ? "Loading..." : "Päivitetty: " + timestampData.slice(11, 19)}</p>
       </header>
@@ -42,4 +47,12 @@ export default App;
         setData(message);
         setTimestampData(timestamp);
       });
-  }, []); */
+  }, []); 
+  
+  
+            <Marker position={center}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+  */

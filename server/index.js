@@ -71,6 +71,9 @@ app.get("/time-and-fetch", async (req, res) => {
     const expectedArrivalTime = new Date(
       expectedArrivalTimeElement.textContent
     );
+    const vehicleLocation = xmlDoc.getElementsByTagName("VehicleLocation")[0];
+    const longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
+    const latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
 
     const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
     const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
@@ -113,7 +116,11 @@ app.get("/time-and-fetch", async (req, res) => {
         const expectedArrivalTime = new Date(
           expectedArrivalTimeElement.textContent
         );
-    
+        const vehicleLocation = xmlDoc.getElementsByTagName("VehicleLocation")[0];
+        const longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
+        const latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
+        console.log("Longitude: " + longitude + ", Latitude: " + latitude);
+
         const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
         const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
     

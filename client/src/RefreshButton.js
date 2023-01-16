@@ -22,4 +22,4 @@ function TimeAndFetchButton({onFetch}) {
   );
 }
 
-export default TimeAndFetchButton;
+//export default TimeAndFetchButton;
