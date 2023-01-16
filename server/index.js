@@ -54,7 +54,7 @@ app.get("/time-and-fetch", async (req, res) => {
   
   const currentTime = new Date();
 
-  if ( responseTimestamp && currentTime - responseTimestamp < 10 * 1000 ) {
+  if ( responseTimestamp && currentTime - responseTimestamp < 9 * 1000 ) {
     const xmlString = await fs.promises.readFile("resp.xml", "utf8");
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "text/xml");
