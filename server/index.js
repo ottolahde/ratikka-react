@@ -1,10 +1,12 @@
 const express = require("express");
+const path = require("path");
 const { spawn } = require("child_process");
 const cors = require("cors");
 const fs = require("fs");
 const DOMParser = require("xmldom").DOMParser;
 
 const PORT = process.env.PORT || 3001;
+let responseTimestamp;
 
 const app = express();
 app.use(cors());
@@ -49,42 +51,82 @@ app.get("/fetch", (req, res) => {
 });
 
 app.get("/time-and-fetch", async (req, res) => {
-    // Run the fetch.py script
+  
+  const currentTime = new Date();
+
+  if ( responseTimestamp && currentTime - responseTimestamp < 10 * 1000 ) {
+    const xmlString = await fs.promises.readFile("resp.xml", "utf8");
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+    const responseTimestampElement = xmlDoc.getElementsByTagName("ResponseTimestamp")[0].textContent;
+    responseTimestamp = new Date(responseTimestampElement);
+    
+    const monitoredCallElements = xmlDoc.getElementsByTagName("MonitoredCall");
+
+    const expectedArrivalTimeElement =
+      monitoredCallElements[0].getElementsByTagName("ExpectedArrivalTime")[0];
+
+    const now = new Date();
+    const expectedArrivalTime = new Date(
+      expectedArrivalTimeElement.textContent
+    );
+
+    const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
+    const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
+
+    if (minutesUntilRounded > 1000) {
+      res.json({ minutes: "Error with waltti API" });
+    } else {
+      res.json({ minutes: minutesUntilRounded, timestamp: responseTimestamp });
+    }
+  } else {
     const pythonScript = spawn("python", ["fetch.py"]);
+
     pythonScript.stdout.on("data", (data) => {
       console.log(data.toString());
     });
-  
+
     pythonScript.stderr.on("data", (data) => {
       console.error(data.toString());
     });
-  
+
     pythonScript.on("close", async (code) => {
       if (code === 0) {
         // Read the XML file and calculate the time until
+
         const xmlString = await fs.promises.readFile("resp.xml", "utf8");
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+    
+        const responseTimestampElement = xmlDoc.getElementsByTagName("ResponseTimestamp")[0].textContent;
+        responseTimestamp = new Date(responseTimestampElement);
+        
         const monitoredCallElements = xmlDoc.getElementsByTagName("MonitoredCall");
+    
         const expectedArrivalTimeElement =
           monitoredCallElements[0].getElementsByTagName("ExpectedArrivalTime")[0];
+    
         const now = new Date();
-        const expectedArrivalTime = new Date(expectedArrivalTimeElement.textContent);
+        const expectedArrivalTime = new Date(
+          expectedArrivalTimeElement.textContent
+        );
+    
         const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
         const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
-        
-        if(minutesUntilRounded > 1000){
-            res.json({ message: "Error with waltti API"})
+    
+        if (minutesUntilRounded > 1000) {
+          res.json({ minutes: "Error with waltti API" });
         } else {
-            res.json({ message: minutesUntilRounded });
+          res.json({ minutes: minutesUntilRounded, timestamp: responseTimestamp });
         }
-
       } else {
         res
           .status(500)
           .send({ message: "An error occurred while running the script" });
       }
     });
+  }
 });
 
 app.listen(PORT, () => {

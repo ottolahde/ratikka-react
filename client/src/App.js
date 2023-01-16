@@ -4,30 +4,14 @@ import "./App.css";
 import axios from 'axios';
 import TimeAndFetchButton from "./RefreshButton";
 
-/*function fetchXml() {
-  axios.fetch('http://localhost:3001/time-and-fetch')
-      .then(response => {
-          //console.log(response.data);
-      })
-      .catch(error => {
-          console.log(error);
-      });
-}
-
-  React.useEffect(() => {
-    fetch("/time-and-fetch")
-      .then((res) => res.json())
-      .then((data) => setData(data.message));
-  }, []);
-*/
-
 function App() {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
     fetch("/time-and-fetch")
       .then((res) => res.json())
-      .then((data) => setData(data.message));
+      .then((data) => setData(data.minutes));
+      //.then((data) => setData(data.responseTimestamp));
   }, []);
 
 
@@ -35,6 +19,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>{!data ? "Loading..." : "Seuraavaan ratikkaan " + data + " minuuttia"}</p>
+       
         <TimeAndFetchButton onFetch={(data) => setData(data)} />
       </header>
     </div>
