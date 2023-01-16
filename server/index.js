@@ -76,9 +76,9 @@ app.get("/time-and-fetch", async (req, res) => {
     const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
 
     if (minutesUntilRounded > 1000) {
-      res.json({ minutes: "Error with waltti API" });
+      res.json({ message: "Error with waltti API" });
     } else {
-      res.json({ minutes: minutesUntilRounded, timestamp: responseTimestamp });
+      res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement });
     }
   } else {
     const pythonScript = spawn("python", ["fetch.py"]);
@@ -100,7 +100,9 @@ app.get("/time-and-fetch", async (req, res) => {
         const xmlDoc = parser.parseFromString(xmlString, "text/xml");
     
         const responseTimestampElement = xmlDoc.getElementsByTagName("ResponseTimestamp")[0].textContent;
+        console.log(responseTimestampElement);
         responseTimestamp = new Date(responseTimestampElement);
+        console.log(responseTimestamp)
         
         const monitoredCallElements = xmlDoc.getElementsByTagName("MonitoredCall");
     
@@ -116,9 +118,9 @@ app.get("/time-and-fetch", async (req, res) => {
         const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
     
         if (minutesUntilRounded > 1000) {
-          res.json({ minutes: "Error with waltti API" });
+          res.json({ message: "Error with waltti API" });
         } else {
-          res.json({ minutes: minutesUntilRounded, timestamp: responseTimestamp });
+          res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement });
         }
       } else {
         res
@@ -128,6 +130,8 @@ app.get("/time-and-fetch", async (req, res) => {
     });
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

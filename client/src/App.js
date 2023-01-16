@@ -1,25 +1,27 @@
 import React from "react";
-import logo from "./logo.svg";
+
 import "./App.css";
-import axios from 'axios';
+
 import TimeAndFetchButton from "./RefreshButton";
 
 function App() {
   const [data, setData] = React.useState(null);
+  const [timestampData, setTimestampData] = React.useState(null);
 
   React.useEffect(() => {
     fetch("/time-and-fetch")
       .then((res) => res.json())
-      .then((data) => setData(data.minutes));
-      //.then((data) => setData(data.responseTimestamp));
+      .then(({ message, timestamp }) => {
+        setData(message);
+        setTimestampData(timestamp);
+      });
   }, []);
-
 
   return (
     <div className="App">
       <header className="App-header">
-        <p>{!data ? "Loading..." : "Seuraavaan ratikkaan " + data + " minuuttia"}</p>
-       
+        <h1>{!data ? "Loading..." : "Seuraavaan ratikkaan " + data + " minuuttia"}</h1>
+        <p>{!timestampData ? "Loading..." : "Päivitetty: " + timestampData.slice(11, 19)}</p>
         <TimeAndFetchButton onFetch={(data) => setData(data)} />
       </header>
     </div>
@@ -27,4 +29,3 @@ function App() {
 }
 
 export default App;
-//<button onClick={fetchXml}>Fetch XML file</button>
