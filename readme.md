@@ -1,6 +1,6 @@
 ![image](https://user-images.githubusercontent.com/63849800/213023950-a55caddb-5cc0-4d25-a8e3-0451d590a633.png)
 
-## Demo at [ottolahde.fi](ottolahde.fi)
+## Demo at [ottolahde.fi](http://ottolahde.fi)
 
 # Public Transport Time Remaining
 
