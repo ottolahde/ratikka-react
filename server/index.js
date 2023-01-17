@@ -53,6 +53,8 @@ app.get("/fetch", (req, res) => {
 app.get("/time-and-fetch", async (req, res) => {
   
   const currentTime = new Date();
+  let latitude = 0;
+  let longitude = 0;
 
   if ( responseTimestamp && currentTime - responseTimestamp < 9 * 1000 ) {
     const xmlString = await fs.promises.readFile("resp.xml", "utf8");
@@ -71,9 +73,16 @@ app.get("/time-and-fetch", async (req, res) => {
     const expectedArrivalTime = new Date(
       expectedArrivalTimeElement.textContent
     );
+
     const vehicleLocation = xmlDoc.getElementsByTagName("VehicleLocation")[0];
-    const longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
-    const latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
+        
+    if (vehicleLocation) {
+      longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
+      latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
+      console.log(longitude);
+    } else {
+      console.log("Vehicle location not available");
+    }
 
     const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
     const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
@@ -81,7 +90,7 @@ app.get("/time-and-fetch", async (req, res) => {
     if (minutesUntilRounded > 1000) {
       res.json({ message: "Error with waltti API" });
     } else {
-      res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement });
+      res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement, lon: longitude, lat: latitude });
     }
   } else {
     const pythonScript = spawn("python", ["fetch.py"]);
@@ -116,10 +125,17 @@ app.get("/time-and-fetch", async (req, res) => {
         const expectedArrivalTime = new Date(
           expectedArrivalTimeElement.textContent
         );
+
         const vehicleLocation = xmlDoc.getElementsByTagName("VehicleLocation")[0];
-        const longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
-        const latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
-        console.log("Longitude: " + longitude + ", Latitude: " + latitude);
+
+        if (vehicleLocation) {
+          longitude = vehicleLocation.getElementsByTagName("Longitude")[0].textContent;
+          latitude = vehicleLocation.getElementsByTagName("Latitude")[0].textContent;
+          console.log(longitude);
+
+        } else {
+          console.log("Vehicle location not available");
+        }
 
         const minutesUntil = (expectedArrivalTime - now) / (60 * 1000);
         const minutesUntilRounded = parseFloat(minutesUntil.toFixed(0));
@@ -127,7 +143,7 @@ app.get("/time-and-fetch", async (req, res) => {
         if (minutesUntilRounded > 1000) {
           res.json({ message: "Error with waltti API" });
         } else {
-          res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement });
+          res.json({ message: minutesUntilRounded, timestamp: responseTimestampElement, lon: longitude, lat: latitude });
         }
       } else {
         res
