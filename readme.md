@@ -28,3 +28,21 @@ time remaining will update every 10 seconds on its own.
 
 This application is currently set to request the data from Waltti API, however, you need to have API access key to use it. If you don't have API access key, this project will not work.
 Also the API is providing data only for Tampere region.
+
+During the night time Waltti API often returns incorrect XML file lacking any information such as
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<Siri xmlns="http://www.siri.org.uk/siri" xmlns:ns2="http://www.ifopt.org.uk/acsb" xmlns:ns3="http://www.ifopt.org.uk/ifopt" xmlns:ns4="http://datex2.eu/schema/1_0/1_0">
+  <ServiceDelivery>
+    <ResponseTimestamp>2023-01-18T00:21:33.536+02:00</ResponseTimestamp>
+    <ProducerRef>MTSLIVE</ProducerRef>
+    <Status>true</Status>
+    <MoreData>false</MoreData>
+    <StopMonitoringDelivery version="1.3">
+      <ResponseTimestamp>2023-01-18T00:21:33.536+02:00</ResponseTimestamp>
+      <Status>true</Status>
+      <ValidUntil>2023-01-18T00:22:03.536+02:00</ValidUntil>
+    </StopMonitoringDelivery>
+  </ServiceDelivery>
+</Siri>
+```
