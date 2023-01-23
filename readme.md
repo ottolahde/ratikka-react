@@ -1,30 +1,48 @@
-Public Transport Time Remaining
+![image](https://user-images.githubusercontent.com/63849800/213023950-a55caddb-5cc0-4d25-a8e3-0451d590a633.png)
 
-This project is a small web application that shows the time remaining until the next public transport arrives at a stop. The application uses the Waltti API to fetch the data and a Python script to parse the XML data returned by the API.
-How it works
+## Demo at [ottolahde.fi](http://ottolahde.fi)
 
-    The user navigates to the application in a web browser.
-    On page load, the application makes a request to the server for the time remaining until the next public transport arrives.
-    The server runs a Python script that makes a request to the Waltti API for data on the arrival times at a specific stop, then parses the XML data returned by the API to calculate the time remaining until the next public transport arrives.
-    The server sends the time remaining to the client as a JSON object.
-    The application displays the time remaining to the user.
+# Public Transport Time Remaining
 
-Setup
+This project is a small web application that shows the time remaining until the next public transport arrives at a stop. The application uses python to fetch the Waltti API and writes the data in a XML file. Back end parses the wanted XML data returned by the API.
+
+# Siri
+>[SIRI](https://www.transmodel-cen.eu/siri-standard/) is a CEN Technical Standard that specifies a European interface standard for exchanging information about the planned, current or projected performance of real-time public transport operations between different computer systems.
+
+
+
+# Setup
 
     Clone the repository
-    Run npm install to install all the required dependencies
+    Run npm install in /client and /server
     Run npm start to start the development server
     Access the application at http://localhost:3000
 
-How to use
+# How to use
 
-    Once the application is running, open your browser and navigate to http://localhost:3000
-    Once the page is loaded, the time remaining until the next public transport arrives will be displayed at the top of the page.
-    If you want to update the time remaining, you can press the "Get Time Until and Fetch" button.
+Once the application is running, open your browser and navigate to http://localhost:3000
+Once the page is loaded, the time remaining until the next public transport arrives will be displayed at the top of the page.
+time remaining will update every 10 seconds on its own.
 
-Note
+# Note
 
 This application is currently set to request the data from Waltti API, however, you need to have API access key to use it. If you don't have API access key, this project will not work.
-Also the API is providing data only for Finnish regions.
+Also the API is providing data only for Tampere region.
 
-This application could be used as an example if you want to learn how to build a web application that fetches data from an API, or how to parse XML data in a Python script. However, it should be noted that this project is a minimal proof of concept and may not be production ready, for example error handling is not yet implemented.
+During the night time Waltti API often returns incorrect XML file lacking any information such as
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<Siri xmlns="http://www.siri.org.uk/siri" xmlns:ns2="http://www.ifopt.org.uk/acsb" xmlns:ns3="http://www.ifopt.org.uk/ifopt" xmlns:ns4="http://datex2.eu/schema/1_0/1_0">
+  <ServiceDelivery>
+    <ResponseTimestamp>2023-01-18T00:21:33.536+02:00</ResponseTimestamp>
+    <ProducerRef>MTSLIVE</ProducerRef>
+    <Status>true</Status>
+    <MoreData>false</MoreData>
+    <StopMonitoringDelivery version="1.3">
+      <ResponseTimestamp>2023-01-18T00:21:33.536+02:00</ResponseTimestamp>
+      <Status>true</Status>
+      <ValidUntil>2023-01-18T00:22:03.536+02:00</ValidUntil>
+    </StopMonitoringDelivery>
+  </ServiceDelivery>
+</Siri>
+```
