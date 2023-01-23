@@ -38,7 +38,7 @@ function App() {
     }
     fetchData();
     // call fetchData every 10 seconds json.location
-    const intervalId = setInterval(fetchData, 10000);
+    const intervalId = setInterval(fetchData, 2000);
 
     // cleanup function to stop the interval when component is unmounted
     return () => clearInterval(intervalId);

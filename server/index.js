@@ -56,7 +56,7 @@ app.get("/time-and-fetch", async (req, res) => {
   let latitude = 0;
   let longitude = 0;
 
-  if ( responseTimestamp && currentTime - responseTimestamp < 9 * 1000 ) {
+  if ( responseTimestamp && currentTime - responseTimestamp < 1 * 1000 ) {
     const xmlString = await fs.promises.readFile("resp.xml", "utf8");
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -117,7 +117,8 @@ app.get("/time-and-fetch", async (req, res) => {
         console.log(responseTimestamp)
         
         const monitoredCallElements = xmlDoc.getElementsByTagName("MonitoredCall");
-    
+        
+        
         const expectedArrivalTimeElement =
           monitoredCallElements[0].getElementsByTagName("ExpectedArrivalTime")[0];
     
@@ -125,7 +126,7 @@ app.get("/time-and-fetch", async (req, res) => {
         const expectedArrivalTime = new Date(
           expectedArrivalTimeElement.textContent
         );
-
+        
         const vehicleLocation = xmlDoc.getElementsByTagName("VehicleLocation")[0];
 
         if (vehicleLocation) {
