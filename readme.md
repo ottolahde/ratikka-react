@@ -22,7 +22,7 @@ This project is a small web application that shows the time remaining until the 
 
 Once the application is running, open your browser and navigate to http://localhost:3000
 Once the page is loaded, the time remaining until the next public transport arrives will be displayed at the top of the page.
-time remaining will update every 10 seconds on its own.
+time remaining will update every 2 seconds on its own, when the website is open.
 
 # Note
 
